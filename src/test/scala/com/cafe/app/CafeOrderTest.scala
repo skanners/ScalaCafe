@@ -9,7 +9,7 @@ class CafeOrderTest extends FunSuite with BeforeAndAfter with Matchers {
 
   val coffee = new Coffee("Coffee", BigDecimal(1.00), MenuCategory.Beverage, MenuItemState.Hot)
   val cola = new Cola("Cola", BigDecimal(0.50), MenuCategory.Beverage, MenuItemState.Cold)
-  val cheeseSw = new CheeseSandwich("Cheese Sandwich", BigDecimal(2.50), MenuCategory.Food, MenuItemState.Cold)
+  val cheeseSw = new CheeseSandwich("Cheese Sandwich", BigDecimal(2.00), MenuCategory.Food, MenuItemState.Cold)
   val steakSw = new SteakSandwich("Steak sandwich", BigDecimal(4.50), MenuCategory.Food, MenuItemState.Hot)
 
   var cafeOrder = new CafeOrder()
@@ -57,14 +57,14 @@ class CafeOrderTest extends FunSuite with BeforeAndAfter with Matchers {
     orderList += (coffee, cheeseSw, steakSw, cola)
     cafeOrder.setCustomerOrder(orderList)
     billTotal = cafeOrder.totalBill(orderList)
-    cafeOrder.applyCharge(orderList, billTotal) should equal(10.20)
+    cafeOrder.applyCharge(orderList, billTotal) should equal(9.60)
   }
 
   test("Total bill for 2 drinks and 2 food items. Both food items are COLD, hence 10% service charge applies") {
     orderList += (coffee, cheeseSw, cheeseSw, cola)
     cafeOrder.setCustomerOrder(orderList)
     billTotal = cafeOrder.totalBill(orderList)
-    cafeOrder.applyCharge(orderList, billTotal) should equal(7.15)
+    cafeOrder.applyCharge(orderList, billTotal) should equal(6.05)
   }
 
   test("Total bill for mix of drinks and HOT food items, hence 20% service charge applies") {

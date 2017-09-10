@@ -14,7 +14,7 @@ class CafeOrderTest extends FunSuite with BeforeAndAfter with Matchers {
 
   var cafeOrder = new CafeOrder()
   var orderList = new ListBuffer[MenuItem]
-  var billTotal:BigDecimal = 0.0
+  var billTotal: BigDecimal = 0.0
 
   before {
     orderList.clear()
@@ -46,6 +46,13 @@ class CafeOrderTest extends FunSuite with BeforeAndAfter with Matchers {
     assert(cafeOrder.totalBill(orderList) == 0)
   }
 
+  test("Total bill ALL drinks, hence no service charge applies") {
+    orderList += (coffee, cola)
+    cafeOrder.setCustomerOrder(orderList)
+    billTotal = cafeOrder.totalBill(orderList)
+    cafeOrder.applyCharge(orderList, billTotal) should equal(1.50)
+  }
+
   test("Total bill for 2 drinks and 2 food items, one of which is a HOT food item, hence 20% service charge applies") {
     orderList += (coffee, cheeseSw, steakSw, cola)
     cafeOrder.setCustomerOrder(orderList)
@@ -59,4 +66,21 @@ class CafeOrderTest extends FunSuite with BeforeAndAfter with Matchers {
     billTotal = cafeOrder.totalBill(orderList)
     cafeOrder.applyCharge(orderList, billTotal) should equal(7.15)
   }
+
+  test("Total bill for mix of drinks and HOT food items, hence 20% service charge applies") {
+    orderList += (coffee, cola, steakSw)
+    cafeOrder.setCustomerOrder(orderList)
+    billTotal = cafeOrder.totalBill(orderList)
+    cafeOrder.applyCharge(orderList, billTotal) should equal(7.20)
+  }
+
+  test("Service charge exceeds £20.00 for ordered items, hence a max service charge of £20.00 applies") {
+    orderList += (coffee, cola, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw,
+      steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw, steakSw)
+    cafeOrder.setCustomerOrder(orderList)
+    billTotal = cafeOrder.totalBill(orderList)
+    cafeOrder.applyCharge(orderList, billTotal) should equal(120.50)
+  }
+
+
 }

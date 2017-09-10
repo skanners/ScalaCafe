@@ -14,6 +14,7 @@ class CafeOrderTest extends FunSuite with BeforeAndAfter with Matchers {
 
   var cafeOrder = new CafeOrder()
   var orderList = new ListBuffer[MenuItem]
+  var billTotal:BigDecimal = 0.0
 
   before {
     orderList.clear()
@@ -45,9 +46,17 @@ class CafeOrderTest extends FunSuite with BeforeAndAfter with Matchers {
     assert(cafeOrder.totalBill(orderList) == 0)
   }
 
-  test("Total bill for 2 drinks and 2 food items") {
+  test("Total bill for 2 drinks and 2 food items, one of which is a HOT food item, hence 20% service charge applies") {
     orderList += (coffee, cheeseSw, steakSw, cola)
     cafeOrder.setCustomerOrder(orderList)
-    cafeOrder.totalBill(orderList) should equal(8.50)
+    billTotal = cafeOrder.totalBill(orderList)
+    cafeOrder.applyCharge(orderList, billTotal) should equal(10.20)
+  }
+
+  test("Total bill for 2 drinks and 2 food items. Both food items are COLD, hence 10% service charge applies") {
+    orderList += (coffee, cheeseSw, cheeseSw, cola)
+    cafeOrder.setCustomerOrder(orderList)
+    billTotal = cafeOrder.totalBill(orderList)
+    cafeOrder.applyCharge(orderList, billTotal) should equal(7.15)
   }
 }

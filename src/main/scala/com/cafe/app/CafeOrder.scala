@@ -1,11 +1,11 @@
 package com.cafe.app
 
-import com.cafe.model.{MenuItem}
+import com.cafe.model.{MenuItem, ServiceCharge}
 
 import scala.collection.mutable.ListBuffer
 import scala.math.BigDecimal.RoundingMode
 
-class CafeOrder extends {
+class CafeOrder extends ServiceCharge {
   private var customerOrder = new ListBuffer[MenuItem]()
 
   def getCustomerOrder(): ListBuffer[MenuItem] = {
@@ -21,7 +21,7 @@ class CafeOrder extends {
   }
 
 
-  def totalBill(orderList: ListBuffer[MenuItem]) : BigDecimal= {
+  def totalBill(orderList: ListBuffer[MenuItem]): BigDecimal = {
     val total = orderList.map(_.getUnitPrice()).sum
     total.setScale(2, RoundingMode.HALF_EVEN)
     println("You ordered " + customerOrder.length + " items.")

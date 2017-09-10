@@ -17,9 +17,13 @@ object OrderApp extends App {
   order.addItem(cola)
   order.addItem(steakSw)
   order.addItem(cheeseSw)
+  order.addItem(steakSw)
 
   orderList = order.getCustomerOrder()
 
   val total = order.totalBill(orderList)
+  val newTotal = order.applyCharge(orderList,total)
+  println("Your total Cafe order after applying a service charge is £" + newTotal)
+
 
 }
